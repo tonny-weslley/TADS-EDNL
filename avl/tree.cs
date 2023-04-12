@@ -7,7 +7,8 @@ namespace AVLTree
         {
             this.root = null;
         }
-        public Tree(Node<T> root){
+        public Tree(Node<T> root)
+        {
             this.root = root;
         }
         public Node<T> getRoot()
@@ -84,51 +85,105 @@ namespace AVLTree
             PostOrderTraversal(node.getRight());
             System.Console.WriteLine(node.getData());
         }
+
         public void Remove(T data)
         {
-            root = Remove(root, data);
+
+            //Otimizacao 01
+            //caso o no a ser removido for o root
+            if(data.Equals(this.root.getData())){
+                if(this.root.getLeft() == null && this.root.getRight() == null){
+                    this.root = null;
+                    return;
+                }
+                if(this.root.getLeft() != null && this.root.getRight() == null){
+                    this.root = this.root.getLeft();
+                    return;
+                }
+                if(this.root.getLeft() == null && this.root.getRight() != null){
+                    this.root = this.root.getRight();
+                    return;
+                }
+                if(this.root.getLeft() != null && this.root.getRight() != null){
+                    Node<T> auxNode = FindMin(this.root.getRight());
+                    this.root.setData(auxNode.getData());
+                    auxNode.getParent().setLeft(null);
+                    return;
+                }
+            }
+
+            // caso o no a ser remodivo nao seja o raiz
+            Node<T> nodeToRemove = Search(data);
+
+            //caso o no a ser removido nao exista
+            if (nodeToRemove == null)
+            {
+                return;
+            }
+
+            //caso o no a ser removido nao tenha filhos
+            if (nodeToRemove.getLeft() == null && nodeToRemove.getRight() == null)
+            {
+                //caso o no a ser removido seja filho a esquerda
+                if (nodeToRemove.getParent().getLeft() == nodeToRemove)
+                {
+                    nodeToRemove.getParent().setLeft(null);
+                    return;
+                }
+                //caso o no a ser removido seja filho a direita
+                if (nodeToRemove.getParent().getRight() == nodeToRemove)
+                {
+                    nodeToRemove.getParent().setRight(null);
+                    return;
+                }
+                //?? Preciso setar o valor do no como nulo ou so o fato de nao ter mais referencia para ele ja e suficiente?
+            }
+
+            //caso o no a ser removido tenha apenas o filho da esquerda
+            if (nodeToRemove.getLeft() != null && nodeToRemove.getRight() == null)
+            {
+                //caso o no a ser removido seja filho a esquerda
+                if (nodeToRemove.getParent().getLeft() == nodeToRemove)
+                {
+                    nodeToRemove.getParent().setLeft(nodeToRemove.getLeft());
+                    return;
+                }
+                //caso o no a ser removido seja filho a direita
+                if (nodeToRemove.getParent().getRight() == nodeToRemove)
+                {
+                    nodeToRemove.getParent().setRight(nodeToRemove.getLeft());
+                    return;
+                }
+            }
+
+            //caso o no a ser removido tenha apenas o filho da direita
+            if (nodeToRemove.getLeft() == null && nodeToRemove.getRight() != null)
+            {
+                //caso o no a ser removido seja filho a esquerda
+                if (nodeToRemove.getParent().getLeft() == nodeToRemove)
+                {
+                    nodeToRemove.getParent().setLeft(nodeToRemove.getRight());
+                    return;
+                }
+                //caso o no a ser removido seja filho a direita
+                if (nodeToRemove.getParent().getRight() == nodeToRemove)
+                {
+                    nodeToRemove.getParent().setRight(nodeToRemove.getRight());
+                    return;
+                }
+            }
+
+            //caso o no a ser removido tenha os dois filhos
+            if (nodeToRemove.getLeft() != null && nodeToRemove.getRight() != null)
+            {
+                Node<T> auxNode = FindMin(nodeToRemove.getRight());
+                nodeToRemove.setData(auxNode.getData());
+                auxNode.getParent().setLeft(null);
+                return;
+            } 
         }
 
-        private Node<T> Remove(Node<T> node, T data)
-        {
-            if (node == null)
-            {
-                return node;
-            }
-
-            if (data.CompareTo(node.data) < 0)
-            {
-                node.left = Remove(node.left, data);
-            }
-            else if (data.CompareTo(node.data) > 0)
-            {
-                node.right = Remove(node.right, data);
-            }
-            else
-            {
-                if (node.left == null && node.right == null)
-                {
-                    return null;
-                }
-                else if (node.left == null)
-                {
-                    return node.right;
-                }
-                else if (node.right == null)
-                {
-                    return node.left;
-                }
-                else
-                {
-                    Node<T> successor = FindMin(node.right);
-                    node.data = successor.data;
-                    node.right = Remove(node.right, successor.data);
-                }
-            }
-
-            return node;
-        }
-
+        // método para encontrar o menor valor da árvore ou sub-arvore
         private Node<T> FindMin(Node<T> node)
         {
             while (node.left != null)
@@ -159,31 +214,6 @@ namespace AVLTree
                 return Search(node.right, data);
             }
         }
-        public void Display()
-        {
-            Display(root, 0);
-        }
-
-        private void Display(Node<T> node, int level)
-        {
-            if (node != null)
-            {
-                Display(node.right, level + 1);
-                Console.WriteLine(new string(' ', 4 * level) + node.data.ToString());
-                Display(node.left, level + 1);
-            }
-        }
-
-        public void PrintHorizontal()
-        {
-            int treeHeight = GetHeight(root);
-            for (int i = 0; i <= treeHeight; i++)
-            {
-                PrintLevel(root, i, 0);
-                Console.WriteLine();
-            }
-        }
-
         private int GetHeight(Node<T> node)
         {
             if (node == null)
@@ -195,21 +225,36 @@ namespace AVLTree
             return Math.Max(leftHeight, rightHeight) + 1;
         }
 
-        private void PrintLevel(Node<T> node, int targetLevel, int auxNodeLevel)
+        private int getDeep(Node<T> node)
+        {
+            if (node == null)
+            {
+                return -1;
+            }
+            return getDeep(node.getParent()) + 1;
+        }
+
+        public void PrintTree()
+        {
+            PrintTree(root);
+        }
+
+        private void PrintTree(Node<T> node)
         {
             if (node == null)
             {
                 return;
             }
-            if (targetLevel == auxNodeLevel)
+            PrintTree(node.right);
+            for (int i = 0; i < getDeep(node); i++)
             {
-                Console.Write(node.data.ToString().PadLeft(4));
+                System.Console.Write("   ");
             }
-            else
-            {
-                PrintLevel(node.left, targetLevel, auxNodeLevel + 1);
-                PrintLevel(node.right, targetLevel, auxNodeLevel + 1);
-            }
+            System.Console.WriteLine(node.data);
+            PrintTree(node.left);
         }
+        
+
+
     }
-}
+}   

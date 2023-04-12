@@ -14,15 +14,20 @@ namespace AVLTree
             tree.Insert(3);
             tree.Insert(7);
             tree.Insert(12);
-            tree.Insert(18);
-            tree.Insert(1);
-            tree.Insert(4);
-            tree.Insert(6);
-            tree.Insert(8);
-            tree.Insert(11);
-            tree.Insert(13);
+            tree.PrintTree();
+            Console.WriteLine("-------------------------------");
+            tree.Remove(5);
+            tree.PrintTree();
 
-            tree.Display();
+            Console.WriteLine("-------------------------------");
+
+            Tree<string> tree2 = new Tree<string>();
+            tree2.Insert("c");
+            tree2.Insert("a");
+            tree2.Insert("b");  
+            tree2.Insert("d");
+
+            tree2.PrintTree();
 
         }
     }
