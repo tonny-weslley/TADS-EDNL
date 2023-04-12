@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AVLTree
+﻿namespace AVLTree
 {
     class Program
     {
