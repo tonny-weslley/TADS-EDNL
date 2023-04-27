@@ -1,4 +1,4 @@
-namespace AVLTree
+namespace BST
 {
     class Tree<T> where T : IComparable<T>
     {
