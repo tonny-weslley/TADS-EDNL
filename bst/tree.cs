@@ -15,6 +15,11 @@ namespace BST
         {
             return this.root;
         }
+
+        public void setRoot(Node<T> node){
+            this.root = node;
+        }
+
         public void Insert(T data)
         {
             //caso não tenha raiz

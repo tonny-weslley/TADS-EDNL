@@ -9,11 +9,7 @@ namespace BST{
 
             AvlNode<T> parent = (AvlNode<T>)node.getParent();
             AvlNode<T> rigth = (AvlNode<T>)node.getRight();
-            AvlNode<T> left = (AvlNode<T>)node.getLeft();
-            
-
-
-            
+            AvlNode<T> left = (AvlNode<T>)node.getLeft(); 
 
 
         }
