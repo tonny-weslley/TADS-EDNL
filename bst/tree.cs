@@ -186,9 +186,9 @@ namespace BST
         // método para encontrar o menor valor da árvore ou sub-arvore
         private Node<T> FindMin(Node<T> node)
         {
-            while (node.left != null)
+            while (node.getLeft() != null)
             {
-                node = node.left;
+                node = node.getLeft();
             }
             return node;
         }
@@ -200,18 +200,18 @@ namespace BST
 
         private Node<T> Search(Node<T> node, T data)
         {
-            if (node == null || node.data.Equals(data))
+            if (node == null || node.getData().Equals(data))
             {
                 return node;
             }
 
-            if (data.CompareTo(node.data) < 0)
+            if (data.CompareTo(node.getData()) < 0)
             {
-                return Search(node.left, data);
+                return Search(node.getLeft(), data);
             }
             else
             {
-                return Search(node.right, data);
+                return Search(node.getRight(), data);
             }
         }
         private int GetHeight(Node<T> node)
@@ -220,8 +220,8 @@ namespace BST
             {
                 return -1;
             }
-            int leftHeight = GetHeight(node.left);
-            int rightHeight = GetHeight(node.right);
+            int leftHeight = GetHeight(node.getLeft());
+            int rightHeight = GetHeight(node.getRight());
             return Math.Max(leftHeight, rightHeight) + 1;
         }
 
@@ -245,13 +245,13 @@ namespace BST
             {
                 return;
             }
-            PrintTree(node.right);
+            PrintTree(node.getRight());
             for (int i = 0; i < getDeep(node); i++)
             {
                 System.Console.Write("   ");
             }
-            System.Console.WriteLine(node.data);
-            PrintTree(node.left);
+            System.Console.WriteLine(node.getData());
+            PrintTree(node.getLeft());
         }
         
 

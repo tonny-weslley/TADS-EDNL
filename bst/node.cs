@@ -2,10 +2,10 @@ namespace BST
 {
     class Node<T>
     {
-        public T data;
-        public Node<T> left;
-        public Node<T> right;
-        public Node<T> parent;
+        private T data;
+        private Node<T> left;
+        private Node<T> right;
+        private Node<T> parent;
         public Node( T data )
         {
             this.data = data;
